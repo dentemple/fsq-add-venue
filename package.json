@@ -1,0 +1,17 @@
+{
+  "name": "fsq-add-venue",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Christine Wang",
+  "license": "ISC",
+  "dependencies": {
+    "csv-parser": "^2.2.0",
+    "fetch": "^1.1.0",
+    "node-fetch": "^2.3.0",
+    "yargs": "^13.2.2"
+  }
+}
