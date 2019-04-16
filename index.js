@@ -61,21 +61,21 @@ fs.createReadStream(inputFile)
                   statusCode
                 }
             }
-          if (statusCode === 200) {
-            const newVenueId = data.response.venue.id;
-            const newVenueName = data.response.venue.name;
-              return {
-                newVenueId,
-                newVenueName,
-                statusCode
-              }
+            if (statusCode === 200) {
+              const newVenueId = data.response.venue.id;
+              const newVenueName = data.response.venue.name;
+                return {
+                  newVenueId,
+                  newVenueName,
+                  statusCode
+                }
             }
             if (statusCode === 400) {
               const requestId = data.meta.requestId;
               const errorMessage = data.meta.errorDetail;
                 return {
                   requestId,
-                  errorMessage: errorMessage,
+                  errorMessage,
                   statusCode
                 }
             }
