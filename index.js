@@ -20,20 +20,31 @@ fs.createReadStream(inputFile)
       state: x.state,
       zip: x.zip,
       ll: x.ll,
-      primaryCategoryId: x.primaryCategoryId
+      primaryCategoryId: x.primaryCategoryId,
+      crossStreet: x.crossStreet,
+      phone: x.phone,
+      allCategoryIds: x.allCategoryIds,
+      parentId: x.parentId,
+      cc: x.cc,
+      twitter: x.twitter,
+      description: x.description,
+      url: x.url
+
 });
   })
   .on('end', () => {
     const venues = results;
     const fetches = venues.map(venue => {
-      const name = encodeURIComponent(venue.name);
-      const ll = encodeURIComponent(venue.ll);
-      const address = encodeURIComponent(venue.address);
-      const city = encodeURIComponent(venue.city);
-      const state = encodeURIComponent(venue.state);
-      const zip = encodeURIComponent(venue.zip);
-      const primaryCategoryId = encodeURIComponent(venue.primaryCategoryId);
-      const url = `https://api.foursquare.com/v2/venues/add?name=${name}&ll=${ll}&address=${address}&city=${city}&state=${state}&zip=${zip}&primaryCategoryId=${primaryCategoryId}&oauth_token=${token}&v=20190110`;
+      let urlParams = '';
+      const params = Object.keys(venue);
+      const values = Object.values(venue);
+
+      // Build the url parameters
+      for (param in params) {
+        urlParams += '&' + params[param] + '=' + encodeURIComponent(values[param])
+      }
+
+      const url = `https://api.foursquare.com/v2/venues/add?oauth_token=${token}&v=20190110${urlParams}`;
 
         return fetch(url, {
             method: 'post'
@@ -68,8 +79,8 @@ fs.createReadStream(inputFile)
                   statusCode
                 }
             }
-        }).catch(error => {
-            console.log(error)
+        }).catch(err => {
+            console.log(err)
         });
     });
 
