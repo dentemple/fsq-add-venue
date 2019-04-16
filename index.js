@@ -47,7 +47,8 @@ function upload() {
         cc: x.cc,
         twitter: x.twitter,
         description: x.description,
-        url: x.url
+        url: x.url,
+        chainIds: x.chainIds
 
       });
     })
