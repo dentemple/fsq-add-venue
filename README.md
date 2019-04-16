@@ -26,7 +26,7 @@ Along with the command, you need to include three required flags:
 * `--token`
 
 
-The `file` flag should be set to the file path of the input file of venue data and attributes for which you would like to add/update. The `output` flag is the file path for where you would like to send the add/update results (the resulting file will include new venue IDs, response code, etc.). The `token` flag is where you set your OAuth token. If you do not have a token already, please generate one by following the instructions [here](https://developer.foursquare.com/docs/api/configuration/authentication). 
+The `file` flag should be set to the file path of the input file of venue data and attributes for which you would like to add/update. The `output` flag is the file path for where you would like to send the add/update results (the resulting file will include new venue IDs, response codes, etc.). The `token` flag is where you set your OAuth token. If you do not have a token already, please generate one by following the instructions [here](https://developer.foursquare.com/docs/api/configuration/authentication). 
 
 <br>
 

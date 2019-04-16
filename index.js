@@ -18,7 +18,7 @@ yargs.command(['upload'], 'upload a file', (yargs) => {}, (argv) => {
 }).argv;
 
 
-// Propose edit to venues
+// Propose edit command
 yargs.command(['update'], 'update venues', (yargs) => {}, (argv) => {
   console.log('Updating your file now...');
   proposeEdit();
