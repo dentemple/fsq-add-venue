@@ -123,7 +123,7 @@ function proposeEdit() {
     }))
     .on('data', x => {
       results.push({
-        venueid: x.venueid,
+        venueid: x.VENUE_ID,
         name: x.name,
         address: x.address,
         city: x.city,
