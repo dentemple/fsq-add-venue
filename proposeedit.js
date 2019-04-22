@@ -43,7 +43,8 @@ module.exports = function proposeEdit() {
     })
     .on('end', () => {
       const venues = results;
-      const fetches = venues.map(venue => {
+      const fetches = venues.map((venue, index) => {
+        const rowNumber = index + 1;
         let urlParams = '';
         const params = Object.keys(venue);
         const values = Object.values(venue);
@@ -66,6 +67,7 @@ module.exports = function proposeEdit() {
           const statusCode = data.meta.code;
           if (statusCode === 200) {
             return {
+              rowNumber,
               venueid,
               statusCode: statusCode + ' Success'
             }
@@ -74,9 +76,20 @@ module.exports = function proposeEdit() {
             const requestId = data.meta.requestId;
             const errorMessage = data.meta.errorDetail;
             return {
+              rowNumber,
               requestId,
               venueid,
               errorMessage,
+              statusCode
+            }
+          }
+          if (statusCode === 500) {
+            const errorType = data.meta.errorType;
+            const errorDetail = data.meta.errorDetail;
+            return {
+              rowNumber,
+              errorType,
+              errorDetail,
               statusCode
             }
           }

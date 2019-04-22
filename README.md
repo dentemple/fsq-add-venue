@@ -64,3 +64,4 @@ node index.js update --file=./your_input_file.csv --output=./your_output_file --
 * `200` - Upload/update was a success
 * `400` - Upload/updated failed (will come with an error message)
 * `409` (upload only) - Venue was not uploaded because there is a duplicate in the system
+* `500` - There was a Foursquare server error

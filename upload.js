@@ -38,7 +38,8 @@ module.exports = function upload() {
     })
     .on('end', () => {
       const venues = results;
-      const fetches = venues.map(venue => {
+      const fetches = venues.map((venue, index) => {
+        const rowNumber = index + 1;
         let urlParams = '';
         const params = Object.keys(venue);
         const values = Object.values(venue);
@@ -62,6 +63,7 @@ module.exports = function upload() {
             const duplicateVenueId = data.response.candidateDuplicateVenues[0].id;
             const duplicateVenueName = data.response.candidateDuplicateVenues[0].name;
             return {
+              rowNumber,
               duplicateVenueId,
               duplicateVenueName,
               statusCode
@@ -71,6 +73,7 @@ module.exports = function upload() {
             const newVenueId = data.response.venue.id;
             const newVenueName = data.response.venue.name;
             return {
+              rowNumber,
               newVenueId,
               newVenueName,
               statusCode
@@ -80,8 +83,19 @@ module.exports = function upload() {
             const requestId = data.meta.requestId;
             const errorMessage = data.meta.errorDetail;
             return {
+              rowNumber,
               requestId,
               errorMessage,
+              statusCode
+            }
+          }
+          if (statusCode === 500) {
+            const errorType = data.meta.errorType;
+            const errorDetail = data.meta.errorDetail;
+            return {
+              rowNumber,
+              errorType,
+              errorDetail,
               statusCode
             }
           }
