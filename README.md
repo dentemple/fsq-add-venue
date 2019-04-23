@@ -59,7 +59,7 @@ node index.js update --file=./your_input_file.csv --output=./your_output_file --
 
 <br>
 
-:warning: Do not run the same file more than once because this could create duplicates in the Foursquare system. After you get your response file back, you can check for errors and create a new input file for venues that errored out.
+:warning: *Do not run the same file more than once because this could create duplicates in the Foursquare system. After you get your response file back, you can check for errors and create a new input file for venues that errored out.*
 
 <br>
 
