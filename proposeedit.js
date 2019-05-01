@@ -29,6 +29,7 @@ module.exports = function proposeEdit() {
         phone: x.phone,
         allCategoryIds: x.allCategoryIds,
         parentId: x.parentId,
+        primaryVenueChainId: x.primaryVenueChainId,
         cc: x.cc,
         twitter: x.twitter,
         description: x.description,
