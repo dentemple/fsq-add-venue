@@ -3,62 +3,36 @@ const fs = require('fs');
 const args = require('yargs').argv;
 const https = require('https');
 const fetch = require('node-fetch');
-const results = [];
+const venues = [];
 
 const inputFile = args.file; // CSV file of new venue attributes
 const outputFile = args.output; // Output file of new venue IDs (or duplicate IDs)
 const token = args.token; // Your Foursquare OAuth token
 
 
-module.exports = function proposeEdit() {
+module.exports = function deleteFields() {
   fs.createReadStream(inputFile)
     .pipe(csv({
       separator: '\t'
     }))
     .on('data', x => {
-      results.push({
+      venues.push({
         venueid: x.VENUE_ID,
-        name: x.name,
-        address: x.address,
-        city: x.city,
-        state: x.state,
-        zip: x.zip,
-        ll: x.ll,
-        primaryCategoryId: x.primaryCategoryId,
-        crossStreet: x.crossStreet,
-        phone: x.phone,
-        allCategoryIds: x.allCategoryIds,
-        parentId: x.parentId,
-        primaryVenueChainId: x.primaryVenueChainId,
-        cc: x.cc,
-        twitter: x.twitter,
-        description: x.description,
-        url: x.url,
-        menuUrl: x.menuUrl,
-        facebookUrl: x.facebookUrl,
-        venuell: x.venuell,
-        removeCategoryIds: x.removeCategoryIds,
-        hours: x.hours
-
+        fields: x.fields
       });
     })
     .on('end', () => {
-      const venues = results;
       const fetches = venues.map((venue, index) => {
         const rowNumber = index + 1;
-        let urlParams = '';
-        const params = Object.keys(venue);
-        const values = Object.values(venue);
+        const fields = venue.fields.split(',');
         const venueid = venue.venueid;
 
-        // Build the url parameters
-        for (param in params) {
-          if (params[param] && values[param] && params[param] != venueid) {
-            urlParams += '&' + params[param] + '=' + encodeURIComponent(values[param])
-          }
-        }
+        // Build field params
+        const deleteFields = fields.map(field => {
+          return '&' + field + '=';
+        })
 
-        const url = `https://api.foursquare.com/v2/venues/${venueid}/proposeedit?oauth_token=${token}&v=20190110${urlParams}`;
+        const url = `https://api.foursquare.com/v2/venues/${venueid}/proposeedit?oauth_token=${token}&v=20190110${deleteFields}`;
 
         return fetch(url, {
           method: 'post'
@@ -107,4 +81,5 @@ module.exports = function proposeEdit() {
       });
     });
 };
+
 
