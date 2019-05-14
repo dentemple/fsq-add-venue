@@ -30,7 +30,7 @@ module.exports = function deleteFields() {
         // Build field params
         const deleteFields = fields.map(field => {
           return '&' + field + '=';
-        })
+        }).join('');
 
         const url = `https://api.foursquare.com/v2/venues/${venueid}/proposeedit?oauth_token=${token}&v=20190110${deleteFields}`;
 
