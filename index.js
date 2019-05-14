@@ -1,7 +1,7 @@
 const yargs = require('yargs');
 const upload = require('./upload.js');
-const proposeEdit = require('./proposeedit.js');
-const deleteFields = require('./deleteFields.js');
+const proposeEdit = require('./propose-edit.js');
+const deleteFields = require('./delete-fields.js');
 
 
 // Upload command
