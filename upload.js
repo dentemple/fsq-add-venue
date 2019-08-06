@@ -62,6 +62,7 @@ module.exports = function upload() {
           })
           .then(data => {
             const statusCode = data.meta.code;
+            console.log(statusCode, data);
             if (statusCode === 409) {
               const duplicateVenueId =
                 data.response.candidateDuplicateVenues[0].id;

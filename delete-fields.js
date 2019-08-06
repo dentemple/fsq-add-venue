@@ -45,6 +45,7 @@ module.exports = function deleteFields() {
           })
           .then(data => {
             const statusCode = data.meta.code;
+            console.log(statusCode, data);
             if (statusCode === 200) {
               return {
                 rowNumber,

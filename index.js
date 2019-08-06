@@ -3,6 +3,8 @@ const upload = require('./upload.js');
 const proposeEdit = require('./propose-edit.js');
 const deleteFields = require('./delete-fields.js');
 
+console.log(process.argv);
+
 // Upload command
 yargs.command(
   ['upload'],
