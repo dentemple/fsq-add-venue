@@ -9,12 +9,13 @@ const inputFile = args.file; // CSV file of new venue attributes
 const outputFile = args.output; // Output file of new venue IDs (or duplicate IDs)
 const token = args.token; // Your Foursquare OAuth token
 
-
 module.exports = function upload() {
   fs.createReadStream(inputFile)
-    .pipe(csv({
-      separator: '\t'
-    }))
+    .pipe(
+      csv({
+        separator: '\t'
+      })
+    )
     .on('data', x => {
       results.push({
         name: x.name,
@@ -33,7 +34,6 @@ module.exports = function upload() {
         description: x.description,
         url: x.url,
         chainIds: x.chainIds
-
       });
     })
     .on('end', () => {
@@ -47,7 +47,8 @@ module.exports = function upload() {
         // Build the url parameters
         for (param in params) {
           if (params[param] && values[param]) {
-            urlParams += '&' + params[param] + '=' + encodeURIComponent(values[param])
+            urlParams +=
+              '&' + params[param] + '=' + encodeURIComponent(values[param]);
           }
         }
 
@@ -55,56 +56,61 @@ module.exports = function upload() {
 
         return fetch(url, {
           method: 'post'
-        }).then(res => {
-          return res.json()
-        }).then(data => {
-          const statusCode = data.meta.code;
-          if (statusCode === 409) {
-            const duplicateVenueId = data.response.candidateDuplicateVenues[0].id;
-            const duplicateVenueName = data.response.candidateDuplicateVenues[0].name;
-            return {
-              rowNumber,
-              duplicateVenueId,
-              duplicateVenueName,
-              statusCode
+        })
+          .then(res => {
+            return res.json();
+          })
+          .then(data => {
+            const statusCode = data.meta.code;
+            if (statusCode === 409) {
+              const duplicateVenueId =
+                data.response.candidateDuplicateVenues[0].id;
+              const duplicateVenueName =
+                data.response.candidateDuplicateVenues[0].name;
+              return {
+                rowNumber,
+                duplicateVenueId,
+                duplicateVenueName,
+                statusCode
+              };
             }
-          }
-          if (statusCode === 200) {
-            const newVenueId = data.response.venue.id;
-            const newVenueName = data.response.venue.name;
-            return {
-              rowNumber,
-              newVenueId,
-              newVenueName,
-              statusCode
+            if (statusCode === 200) {
+              const newVenueId = data.response.venue.id;
+              const newVenueName = data.response.venue.name;
+              return {
+                rowNumber,
+                newVenueId,
+                newVenueName,
+                statusCode
+              };
             }
-          }
-          if (statusCode === 400) {
-            const requestId = data.meta.requestId;
-            const errorMessage = data.meta.errorDetail;
-            return {
-              rowNumber,
-              requestId,
-              errorMessage,
-              statusCode
+            if (statusCode === 400) {
+              const requestId = data.meta.requestId;
+              const errorMessage = data.meta.errorDetail;
+              return {
+                rowNumber,
+                requestId,
+                errorMessage,
+                statusCode
+              };
             }
-          }
-          if (statusCode === 500) {
-            const errorType = data.meta.errorType;
-            const errorDetail = data.meta.errorDetail;
-            return {
-              rowNumber,
-              errorType,
-              errorDetail,
-              statusCode
+            if (statusCode === 500) {
+              const errorType = data.meta.errorType;
+              const errorDetail = data.meta.errorDetail;
+              return {
+                rowNumber,
+                errorType,
+                errorDetail,
+                statusCode
+              };
             }
-          }
-        }).catch(err => {
-          console.log(err)
-        });
+          })
+          .catch(err => {
+            console.log(err);
+          });
       });
 
-      Promise.all(fetches).then((venues) => {
+      Promise.all(fetches).then(venues => {
         fs.writeFile(outputFile, JSON.stringify(venues), function(err) {
           if (err) console.log(err);
           console.log('Upload complete and successfully written to file.');

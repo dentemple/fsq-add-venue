@@ -9,12 +9,13 @@ const inputFile = args.file; // CSV file of new venue attributes
 const outputFile = args.output; // Output file of new venue IDs (or duplicate IDs)
 const token = args.token; // Your Foursquare OAuth token
 
-
 module.exports = function proposeEdit() {
   fs.createReadStream(inputFile)
-    .pipe(csv({
-      separator: '\t'
-    }))
+    .pipe(
+      csv({
+        separator: '\t'
+      })
+    )
     .on('data', x => {
       results.push({
         venueid: x.VENUE_ID,
@@ -39,7 +40,6 @@ module.exports = function proposeEdit() {
         venuell: x.venuell,
         removeCategoryIds: x.removeCategoryIds,
         hours: x.hours
-
       });
     })
     .on('end', () => {
@@ -54,7 +54,8 @@ module.exports = function proposeEdit() {
         // Build the url parameters
         for (param in params) {
           if (params[param] && values[param] && params[param] != venueid) {
-            urlParams += '&' + params[param] + '=' + encodeURIComponent(values[param])
+            urlParams +=
+              '&' + params[param] + '=' + encodeURIComponent(values[param]);
           }
         }
 
@@ -62,44 +63,47 @@ module.exports = function proposeEdit() {
 
         return fetch(url, {
           method: 'post'
-        }).then(res => {
-          return res.json()
-        }).then(data => {
-          const statusCode = data.meta.code;
-          if (statusCode === 200) {
-            return {
-              rowNumber,
-              venueid,
-              statusCode: statusCode + ' Success'
+        })
+          .then(res => {
+            return res.json();
+          })
+          .then(data => {
+            const statusCode = data.meta.code;
+            if (statusCode === 200) {
+              return {
+                rowNumber,
+                venueid,
+                statusCode: statusCode + ' Success'
+              };
             }
-          }
-          if (statusCode === 400) {
-            const requestId = data.meta.requestId;
-            const errorMessage = data.meta.errorDetail;
-            return {
-              rowNumber,
-              requestId,
-              venueid,
-              errorMessage,
-              statusCode
+            if (statusCode === 400) {
+              const requestId = data.meta.requestId;
+              const errorMessage = data.meta.errorDetail;
+              return {
+                rowNumber,
+                requestId,
+                venueid,
+                errorMessage,
+                statusCode
+              };
             }
-          }
-          if (statusCode === 500) {
-            const errorType = data.meta.errorType;
-            const errorDetail = data.meta.errorDetail;
-            return {
-              rowNumber,
-              errorType,
-              errorDetail,
-              statusCode
+            if (statusCode === 500) {
+              const errorType = data.meta.errorType;
+              const errorDetail = data.meta.errorDetail;
+              return {
+                rowNumber,
+                errorType,
+                errorDetail,
+                statusCode
+              };
             }
-          }
-        }).catch(err => {
-          console.log(err)
-        });
+          })
+          .catch(err => {
+            console.log(err);
+          });
       });
 
-      Promise.all(fetches).then((venues) => {
+      Promise.all(fetches).then(venues => {
         fs.writeFile(outputFile, JSON.stringify(venues), function(err) {
           if (err) console.log(err);
           console.log('Update complete and successfully written to file.');
@@ -107,4 +111,3 @@ module.exports = function proposeEdit() {
       });
     });
 };
-
